@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        /* Basic Style */
+
+body {
+	background: #fff;
+	color: #333;
+	font-family: Lato, sans-serif;
+	background-color:#e4e4e4;
+}
+
+.container {
+	display: block;
+	width: 400px;
+	margin: 10px auto 100px;
+    margin-top: 130px;
+	background-color:#fff;
+	padding:0px 10px 10px 10px;
+	border-radius:10px
+}
+
+h2 {
+	text-align:center;
+	padding-top:10px;
+	margin-bottom:0px;
+}
+
+ul {
+	margin: 0;
+	padding: 0;
+}
+
+li * {
+	float: left;
+}
+
+li,
+h3 {
+	clear: both;
+	list-style: none;
+}
+
+input,
+button {
+	outline: none;
+}
+
+button {
+	background: none;
+	border: 0px;
+	color: #888;
+	font-size: 15px;
+	width: 60px;
+	margin: 10px 0 0;
+	font-family: Lato, sans-serif;
+	cursor: pointer;
+}
+
+button:hover {
+	color: #333;
+}
+
+
+/* Heading */
+
+h3,
+label[for='new-task'] {
+	color: #333;
+	font-weight: 700;
+	font-size: 15px;
+	border-bottom: 2px solid #333;
+	padding: 20px 0 10px;
+	margin: 0;
+	text-transform: uppercase;
+}
+
+input[type="text"] {
+	margin: 0;
+	font-size: 18px;
+	line-height: 18px;
+	height: 18px;
+	padding: 10px;
+	border: 1px solid #ddd;
+	background: #fff;
+	border-radius: 6px;
+	font-family: Lato, sans-serif;
+	color: #888;
+}
+
+input[type="text"]:focus {
+	color: #333;
+}
+
+
+/* New Task */
+
+label[for='new-task'] {
+	display: block;
+	margin: 0 0 20px;
+}
+
+input#new-task {
+	float: left;
+	width: 318px;
+}
+
+p > button:hover {
+	color: #0FC57C;
+}
+
+
+/* Task list */
+
+li {
+	overflow: hidden;
+	padding: 20px 0;
+	border-bottom: 1px solid #eee;
+}
+
+li > input[type="checkbox"] {
+	margin: 0 10px;
+	position: relative;
+	top: 15px;
+}
+
+li > label {
+	font-size: 18px;
+	line-height: 40px;
+	width: 237px;
+	padding: 0 0 0 11px;
+}
+
+li > input[type="text"] {
+	width: 226px;
+}
+
+li > .delete:hover {
+	color: #CF2323;
+}
+
+
+/* Completed */
+
+#completed-tasks label {
+	text-decoration: line-through;
+	color: #888;
+}
+
+
+/* Edit Task */
+
+ul li input[type=text] {
+	display: none;
+}
+
+ul li.editMode input[type=text] {
+	display: block;
+}
+
+ul li.editMode label {
+	display: none;
+}
+
+.login{
+    display: flex;
+    justify-content: end;
+    flex-direction: row;
+}
+    </style>
+</head>
+<body>
+    <div class="login" >
+      
+        <h4 style="margin-top: 6px;"><%= username %></h4>
+        <a href="/login" >
+        <svg  style="width: 30px; height: 30px;"  xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M4 22C4 17.5817 7.58172 14 12 14C16.4183 14 20 17.5817 20 22H18C18 18.6863 15.3137 16 12 16C8.68629 16 6 18.6863 6 22H4ZM12 13C8.685 13 6 10.315 6 7C6 3.685 8.685 1 12 1C15.315 1 18 3.685 18 7C18 10.315 15.315 13 12 13ZM12 11C14.21 11 16 9.21 16 7C16 4.79 14.21 3 12 3C9.79 3 8 4.79 8 7C8 9.21 9.79 11 12 11Z"></path></svg>
+    </a>
+	  <form method="get" action="\login">
+	  <button id="logout" onclick="clearlocalstorage()"> logout</button>
+	  </form>
+    </div>
+   
+        <div  class="container">
+            <h2>TODO LIST</h2>
+            <h3>Add Item</h3>
+            <p>
+				<form method="post" action="/add">
+				<input id="new-task" type="text"><button onclick="putdata()">Add</button>
+			   </form>
+			 </p>
+    
+            <h3>Todo</h3>
+			
+			<ul id="incomplete-tasks">
+				
+				<script>
+					if(`<%= user %>`){
+					const user = '<%= user %>'; 
+					if(user==''){
+
+					 }else{
+					const userItems = user.split(',');
+			         userItems.forEach((item, index) => {
+						const newTask = document.createElement('li');
+						newTask.id = 'to_complete';
+						newTask.task_number = index;
+						newTask.innerText = item;
+						document.getElementById('incomplete-tasks').appendChild(newTask);
+					});}}
+				</script>
+			</ul>
+    
+           
+        </div>
+    </div>
+	
+	<script>
+		
+    let incom_task =document.getElementById("incomplete-tasks")
+    let incomplete_task_counter=0;
+	  // whenever user clicks then it stores data in  local storage 
+	  // then it appends all the data in document present in local storage 
+
+	   const putdata =()=>{
+		let task_details =document.getElementById("new-task")
+		localStorage.setItem(incomplete_task_counter,task_details.value)
+		
+		console.log(document.cookie)
+		document.cookie = `${incomplete_task_counter}= ${task_details.value}`; 
+		task_details.value=''
+		disp(localStorage.getItem(incomplete_task_counter))
+        }
+       
+		const disp =(data)=>{
+		let new_task =document.createElement('li');
+		new_task.setAttribute("id",`to_complete`)
+		new_task.setAttribute("task_number",`${incomplete_task_counter}`)
+		incomplete_task_counter++
+		new_task.innerText=data;
+        //	incom_task.appendChild(new_task)
+	  } 
+      // to display data if user refreshes the page 
+	  for (i = 0 ; i<1000 ;i++){
+			if(localStorage.getItem(i))
+			{
+		     
+			 disp(localStorage.getItem(i))
+			}else{
+				incomplete_task_counter=i
+				break
+			}
+		}
+      
+		// to ehnance ui 
+		document.getElementById("incomplete-tasks").addEventListener('click',(event)=>{
+           console.log(event.target)
+		   event.target.style.textDecoration="line-through"
+		  
+		  localStorage.setItem(event.target.getAttribute("task_number"),event.target.innerText)
+
+		})
+      
+	  // to clear local storage
+	  function clearlocalstorage()
+	  {
+		localStorage.clear();
+		//delete_cookie();
+
+	  }
+	  // to delete cookies 
+	  function delete_cookie()
+	   {  for(let i = 0 ; i<1000;i++){
+		  console.log(document.cookie)
+		   if(document.cookie.i){
+          document.cookie = name +'=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+		   }
+		}
+	   }
+
+
+
+	</script>
+    
+    
+</body>
+</html>
